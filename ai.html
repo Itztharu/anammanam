@@ -1,0 +1,1909 @@
+
+<!--  details-template.html  -->
+<template id="detail1">
+  <div class="details">
+    <td colspan="3">
+      <div class="code-block">
+       <div class="params">
+        <table>
+          <thead>
+            <tr>
+              <th><strong>Params</strong></th>
+              <th><strong>Desc</strong></th>
+              <th><strong>required</strong></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>action</td>
+              <td>Action filters</td>
+              <td>true</td>
+            </tr>            
+            <tr>
+              <td>url</td>
+              <td>Image URL</td>
+              <td>true</td>
+            </tr>
+            <tr>
+              <td>key</td>
+              <td>Your Api Key</td>
+              <td>true</td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <strong class="tag-title">List action styles</strong>
+        <div class="table">
+        <table>
+          <thead>
+            <tr>
+              <th><strong>3D</strong></th>
+              <th><strong>Anime</strong></th>
+              <th><strong>Painting</strong></th>
+              <th><strong>Digital</strong></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>disney</td>
+              <td>maid</td>
+              <td>colorfull</td>
+              <td>steam</td>
+            </tr>           
+             <tr>
+              <td>3dcartoon</td>
+              <td>anime2d</td>
+              <td></td>
+              <td></td>
+            </tr>
+             <tr>
+              <td></td>
+              <td>anime2real</td>
+              <td></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+          <p>
+            <strong>Define Your Api Config</strong>
+          </p>
+        <div onclick="copyCode(this)" id="btn-copy">
+          <i class="btn-copy fas fa-copy"></i>
+        </div>
+          <pre class="code">
+            <code class="language-js">
+const api = {
+  xterm: {
+    url: "https://ai.xterm.codes",
+    key: "YOUR_APIKEY"
+  }
+};
+            </code>
+          </pre>
+          <p>
+            <strong>Code:</strong>
+          </p>
+        <div onclick="copyCode(this)" id="btn-copy">
+         <i class="btn-copy fas fa-copy"></i>
+        </div>
+        <pre class="code">
+<code class="language-js">
+async function filters(imageurl, model) {
+  let tryng = 0;
+  // Membuat request filters
+  let ai = await fetch(`${api.xterm.url}/api/img2img/filters?action=${model}&url=${imageurl}&key=${api.xterm.key}`)
+    .then(response => response.json());
+
+  if (!ai.status) return ai;
+  console.log(ai);
+
+  while (tryng < 50) { // Maksimal 50 kali
+    tryng += 1; // Menambahkan nilai tryng
+    // Pengecekan status request
+    let s = await fetch(`${api.xterm.url}/api/img2img/filters/batchProgress?id=${ai.id}`)
+      .then(response => response.json());
+
+    if (s.status === 1) {
+      console.log("Starting...");
+    } else if (s.status === 2) {
+      console.log("Processing...");
+    } else if (s.status === 3) {
+      return s; // Mengembalikan nilai s
+    } else if (s.status === 4) {
+      return console.log("Maaf terjadi kesalahan. Coba gunakan gambar lain!");
+    }
+
+    await new Promise(resolve => setTimeout(resolve, 2000));
+  }
+}
+
+filters("https://telegra.ph/file/ffaae4075d654f758c0c5.jpg", "anime2d")
+  .then(result => console.log(result))
+  .catch(error => console.error("Error:", error));
+</code></pre>
+      </div>
+    </td>
+  </div>
+</template>
+
+<template id="detail4">
+  <div class="details">
+    <td colspan="3">
+      <div class="code-block">
+       <div class="params">
+        <table>
+          <thead>
+            <tr>
+              <th><strong>Body</strong></th>
+              <th><strong>Desc</strong></th>
+              <th><strong>required</strong></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>prompt</td>
+              <td>your prompt</td>
+              <td>true</td>
+            </tr>            
+            <tr>
+              <td>negativePrompt</td>
+              <td>Your Negative Prompt</td>
+              <td>true</td>
+            </tr>
+            <tr>
+              <td>checkpoint</td>
+              <td>checkpoint model ID</td>
+              <td>true</td>
+            </tr>
+            <tr>
+              <td>lora</td>
+              <td>lora model ID</td>
+              <td>true</td>
+            </tr>
+            <tr>
+              <td>cfgScale</td>
+              <td>Cfg Scale</td>
+              <td>true</td>
+            </tr>
+            <tr>
+              <td>sampling</td>
+              <td>sampling type</td>
+              <td>true</td>
+            </tr>
+            <tr>
+              <td>samplingSteps</td>
+              <td>sampling steps</td>
+              <td>true</td>
+            </tr>
+            <tr>
+              <td>aspect_ratio</td>
+              <td>image ratio image</td>
+              <td>true</td>
+            </tr>
+            <tr>
+              <td>key</td>
+              <td>Your Api Key</td>
+              <td>true</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <strong class="tag-title">List Model</strong>
+
+        
+<table>
+  <thead>
+    <tr>
+      <th><strong>Checkpoint</strong></th>
+      <th><strong>Lora</strong></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>AWPainting_v1.3</td>
+      <td>Realistic yuzu high heel_unreal feel</td>
+    </tr>
+    <tr>
+      <td>ReVAnimated_v122_V122</td>
+      <td>2.5D-elegant Anime_V1.0</td>
+    </tr>
+    <tr>
+      <td>GhostMix fooling around_V2.0</td>
+      <td>Wanxiang Animation (sd-1.5 Edition)_Decrease collapse</td>
+    </tr>
+    <tr>
+      <td>Genshin game</td>
+      <td>Cyberpunk | CyberpunkAI_v1.0</td>
+    </tr>
+    <tr>
+      <td>MeinaUnreal</td>
+      <td>Cute_Mech_style cute mecha wind_v1.0</td>
+    </tr>
+    <tr>
+      <td>2.5D-elegant Anime_V1.0</td>
+      <td>niji - C_dark_v1.0</td>
+    </tr>
+    <tr>
+      <td>Wanxiang Animation (sd-1.5 Edition)_Decrease collapse</td>
+      <td>Shi Shu-Movie Poster_v1.0</td>
+    </tr>
+    <tr>
+      <td><a style="color:cyan" href="/api/text2img/stablediffusion/list_checkpoints">View more checkpoints</a></td>
+      <td><a style="color:cyan" href="/api/text2img/stablediffusion/list_loras">View more loras</a></td>
+    </tr>
+  </tbody>
+</table>
+
+        <strong class="tag-title">List aspect_ratios:</strong>
+
+<table>
+  <thead>
+    <tr>
+      <th><strong>aspect_ratio</strong></th>
+      <th><strong>Description</strong></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1:1</td>
+      <td>768 x 768</td>
+    </tr>
+    <tr>
+      <td>9:16</td>
+      <td>810 x 1440</td>
+    </tr>
+    <tr>
+      <td>16:9</td>
+      <td>1440 x 810</td>
+    </tr>
+    <tr>
+      <td>3:4</td>
+      <td>810 x 1080</td>
+    </tr>
+    <tr>
+      <td>4:3</td>
+      <td>1080 x 810</td>
+    </tr>
+    <tr>
+      <td>2:3</td>
+      <td>810 x 1215</td>
+    </tr>
+    <tr>
+      <td>3:2</td>
+      <td>1215 x 810</td>
+    </tr>
+    <tr>
+      <td>21:9</td>
+      <td>1920 x 810</td>
+    </tr>
+    <tr>
+      <td>9:21</td>
+      <td>810 x 1920</td>
+    </tr>
+    <tr>
+      <td>5:4</td>
+      <td>960 x 768</td>
+    </tr>
+    <tr>
+      <td>4:5</td>
+      <td>768 x 960</td>
+    </tr>
+    <tr>
+      <td>18:9</td>
+      <td>1620 x 810</td>
+    </tr>
+    <tr>
+      <td>9:18</td>
+      <td>810 x 1620</td>
+    </tr>
+    <tr>
+      <td>16:10</td>
+      <td>1440 x 900</td>
+    </tr>
+    <tr>
+      <td>10:16</td>
+      <td>900 x 1440</td>
+    </tr>
+  </tbody>
+</table>
+        </div>
+          <p>
+            <strong>Define Your Api Config</strong>
+          </p>
+        <div onclick="copyCode(this)" id="btn-copy">
+          <i class="btn-copy fas fa-copy"></i>
+        </div>
+          <pre class="code">
+            <code class="language-js">
+const api = {
+  xterm: {
+    url: "https://ai.xterm.codes",
+    key: "YOUR_APIKEY"
+  }
+};
+            </code>
+          </pre>
+          
+        <p><strong>Example Body Input:</strong></p>
+        <div onclick="copyCode(this)" id="btn-copy">
+          <i class="btn-copy fas fa-copy"></i>
+        </div>
+        <pre class="code"><code class="language-js">
+{
+    checkpoint: "AWPainting_v1.3",
+    prompt: "Best quality, masterpiece, 8K CG wallpaper. Detailed, official art. Beautiful girl with black hair in a cyberpunk city",
+    negativePrompt: "",
+    aspect_ratio: "1:1",
+    lora: [
+        { 
+           model: "Realistic yuzu high heel_unreal feel",
+           weight: 0.80//(0-1) Biarkan default (Lebih stabil)
+        }
+    ],
+    sampling: "DPM++ 2M Karras",
+    samplingSteps: 20,//Biarkan default (lebih stabil)
+    cfgScale: 7//Biarkan default (Lebih stabil)
+}</code></pre>
+        <p><strong>Code:</strong></p>
+        <div onclick="copyCode(this)" id="btn-copy">
+          <i class="btn-copy fas fa-copy"></i>
+        </div>
+        <pre class="code"><code class="language-js">
+async function stablediffusion(body) {
+  let tryng = 0;
+
+  try {
+    // Membuat request stablediffusion
+    let aiResponse = await fetch(`${api.xterm.url}/api/text2img/stablediffusion/createTask?key=YOUR_APIKEY`, {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    });
+
+    // Memeriksa jika respons bukan JSON
+    if (!aiResponse.ok) {
+      throw new Error(`HTTP error! status: ${aiResponse.status}`);
+    }
+
+    // Memeriksa Content-Type untuk memastikan JSON
+    const contentType = aiResponse.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      const text = await aiResponse.text();
+      throw new Error(`Expected JSON, but got: ${text}`);
+    }
+
+    let ai = await aiResponse.json();
+
+    if (!ai.status) return ai;
+    console.log(ai);
+
+    while (tryng < 50) { // Maksimal 50 kali
+      tryng += 1; // Menambahkan nilai tryng
+
+      // Pengecekan status request
+      let sResponse = await fetch(`${api.xterm.url}/api/text2img/stablediffusion/taskStatus?id=${ai.id}`);
+
+      if (!sResponse.ok) {
+        throw new Error(`HTTP error! status: ${sResponse.status}`);
+      }
+
+      const sContentType = sResponse.headers.get('content-type');
+      if (!sContentType || !sContentType.includes('application/json')) {
+        const text = await sResponse.text();
+        throw new Error(`Expected JSON, but got: ${text}`);
+      }
+
+      let s = await sResponse.json();
+
+      if (s.taskStatus === 0) {
+        console.log("Starting...");
+      } else if (s.taskStatus === 1) {
+        console.log("Processing...", s.progress);
+      } else if (s.taskStatus === 2) {
+        return s; // Mengembalikan nilai s
+      } else if (s.taskStatus === 3) {
+        return console.log("Maaf terjadi kesalahan. Coba gunakan gambar lain!");
+      }
+
+      await new Promise(resolve => setTimeout(resolve, 2000));
+    }
+  } catch (error) {
+    console.error("Error:", error);
+  }
+}
+
+stablediffusion({ 
+    checkpoint: "AWPainting_v1.3",
+    prompt: "Best quality, masterpiece, 8K CG wallpaper. Detailed, official art. Beautiful girl with black hair in a cyberpunk city",
+    negativePrompt: "",
+    aspect_ratio: "1:1",
+    lora: [
+        { 
+           model: "Realistic yuzu high heel_unreal feel",
+           weight: 0.8
+        }
+    ],
+    sampling: "DPM++ 2M Karras",
+    samplingSteps: 20, 
+    cfgScale: 7
+})
+.then(result => console.log(result))
+.catch(error => console.error("Error:", error));
+
+</code></pre>
+      </div>
+    </td>
+  </div>
+</template>
+
+<template id="detail5">
+  <div class="details">
+    <td colspan="3">
+      <div class="code-block">
+       <div class="params">
+        <table>
+          <thead>
+            <tr>
+              <th><strong>Params</strong></th>
+              <th><strong>Desc</strong></th>
+              <th><strong>required</strong></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>query</td>
+              <td>ask something</td>
+              <td>true</td>
+            </tr>            
+            <tr>
+              <td>key</td>
+              <td>Your Api Key</td>
+              <td>true</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+          <p>
+            <strong>Define Your Api Config</strong>
+          </p>
+        <div onclick="copyCode(this)" id="btn-copy">
+          <i class="btn-copy fas fa-copy"></i>
+        </div>
+          <pre class="code">
+            <code class="language-js">
+const api = {
+  xterm: {
+    url: "https://ai.xterm.codes",
+    key: "YOUR_APIKEY"
+  }
+};
+            </code>
+          </pre>
+
+          <strong>Simple request:</strong>
+          <div onclick="copyCode(this)" id="btn-copy">
+            <i class="btn-copy fas fa-copy"></i>
+          </div>
+          <pre class="code">
+            <code class="language-js">https://ai.xterm.codes/api/chat/bard?query=query&key=YOUR_APIKEY</code>
+          </pre>
+          <br>
+
+          <p>
+            <strong>Full code:</strong>
+          </p>
+        <div onclick="copyCode(this)" id="btn-copy">
+          <i class="btn-copy fas fa-copy"></i>
+        </div>
+          <pre class="code">
+            <code class="language-js">
+async function bard(q) {
+  let ai = await fetch(`${api.xterm.url}/api/chat/bard?query=${q}&key=${api.xterm.key}`)
+  .then(response => response.json());
+  return ai
+}
+bard("Hello, who are you?")
+.then(a => console.log(a))
+            </code>
+          </pre>
+        </div>
+      </div>
+    </td>
+  </div>
+</template>
+
+<template id="detail8">
+  <div class="details">
+    <td colspan="3">
+      <div class="code-block">
+        <div class="params">
+       
+        <div class="table">
+        <table>
+          <thead>
+            <tr>
+              <th><strong>Body</strong></th>
+              <th><strong>array json</strong></th>
+              <th><strong>required</strong></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>messages</td>
+              <td>
+                <pre class="code">
+                  <code class="language-js" style="font-size: 0.6rem; border-radius: 2px;">[{ role: "user",content:"halo" }]</code>
+                </pre>
+              </td>
+              <td>true</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th><strong>Params</strong></th>
+              <th><strong>Desc</strong></th>
+              <th><strong>required</strong></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>key</td>
+              <td>Your Api Key</td>
+              <td>true</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <strong class="tag-title">List role:</strong>
+
+        <table>
+          <thead>
+            <tr>
+              <th><strong>role</strong></th>
+              <th><strong>Desc</strong></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>user</td>
+              <td>User message</td>
+            </tr>
+            <tr>
+              <td>assistant</td>
+              <td>Gpt response mssage</td>
+            </tr>
+            <tr>
+              <td>system</td>
+              <td>Jailbreak messages</td>
+            </tr>
+          </tbody>
+        </table>
+
+        </div>
+          <p>
+            <strong>Define Your Api Config</strong>
+          </p>
+        <div onclick="copyCode(this)" id="btn-copy">
+          <i class="btn-copy fas fa-copy"></i>
+        </div>
+          <pre class="code">
+            <code class="language-js">
+const api = {
+  xterm: {
+    url: "https://ai.xterm.codes",
+    key: "YOUR_APIKEY"
+  }
+};
+            </code>
+          </pre>
+
+          <strong>Code:</strong>
+          <div onclick="copyCode(this)" id="btn-copy">
+            <i class="btn-copy fas fa-copy"></i>
+          </div>
+          <pre class="code">
+            <code class="language-js">
+async function gpt(body){
+   let res = await fetch(`${api.xterm.url}/api/chat/gpt?key=${api.xterm.key}`, {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    })
+   return await res.json()
+}
+let _body = { 
+    messages: [{
+        role: "user",
+        content: "halo"
+    }]
+}
+gpt(_body)
+.then(a => console.log(a))
+            </code>
+          </pre>
+          <strong>Example response:</strong>
+          <div onclick="copyCode(this)" id="btn-copy">
+            <i class="btn-copy fas fa-copy"></i>
+          </div>
+          <pre class="code">
+            <code class="language-js">
+{ status: true, response: 'Hello there! How can I assist you today?' }
+            </code>
+          </pre>
+        </div>
+      </div>
+    </td>
+  </div>
+</template>
+
+<template id="detail11">
+  <div class="details">
+    <td colspan="3">
+      <div class="code-block">
+        <div class="params">
+        <table>
+          <thead>
+            <tr>
+              <th><strong>Params</strong></th>
+              <th><strong>Desc</strong></th>
+              <th><strong>required</strong></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>id</td>
+              <td>Lora model id</td>
+              <td>true</td>
+            </tr>
+            <tr>
+              <td>prompt</td>
+              <td>your prompt</td>
+              <td>true</td>
+            </tr>
+            <tr>
+              <td>negativePrompt</td>
+              <td>Your negative prompt</td>
+              <td>true</td>
+            </tr>
+            <tr>
+              <td>key</td>
+              <td>Your Api Key</td>
+              <td>true</td>
+            </tr>
+          </tbody>
+        </table>
+                
+        <strong class="tag-title">List Lora model:</strong>
+
+<table>
+  <thead>
+    <tr>
+      <th><strong>ID</strong></th>
+      <th><strong>Name</strong></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>Donghua#01</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>YunXi - PerfectWorld</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>Sea God(Tang San) - Douluo Dalu</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>XiaoYiXian - Battle Through The Heavens</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>Angel God(Xian Renxue) - Douluo Dalu</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>Sheng Cai'er - Throne Of Seal</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td>HuTao - Genshin Impact</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td>TangWutong - The Unrivaled Tang Sect</td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td>CaiLin(Medusa) - Battle Through The Heavens</td>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td>Elaina - Majo No Tabi Tabi</td>
+    </tr>
+    <tr>
+      <td>11</td>
+      <td>Jiang Nanan - The Unrivaled Tang Sect</td>
+    </tr>
+    <tr>
+      <td>12</td>
+      <td>Cailin(Queen Medusa) - BTTH [4K Ultra HD]</td>
+    </tr>
+    <tr>
+      <td>13</td>
+      <td>MaXiaoTao - The Unrivaled Tang Sect</td>
+    </tr>
+    <tr>
+      <td>14</td>
+      <td>Yor Forger - Spy x Family</td>
+    </tr>
+    <tr>
+      <td>15</td>
+      <td>Boboiboy Galaxy</td>
+    </tr>
+    <tr>
+      <td>16</td>
+      <td>Hisoka Morow</td>
+    </tr>
+    <tr>
+      <td>17</td>
+      <td>Ling Luochen ▪︎ The Unrivaled Tang Sect</td>
+    </tr>
+    <tr>
+      <td>18</td>
+      <td>Tang Wutong ▪︎ The Unrivaled Tang Sect</td>
+    </tr>
+    <tr>
+      <td>19</td>
+      <td>Huo Yuhao ▪︎ The Unrivaled Tang Sect</td>
+    </tr>
+  </tbody>
+</table>
+
+          <p>
+            <strong>Define Your Api Config</strong>
+          </p>
+        <div onclick="copyCode(this)" id="btn-copy">
+          <i class="btn-copy fas fa-copy"></i>
+        </div>
+          <pre class="code">
+            <code class="language-js">
+const api = {
+  xterm: {
+    url: "https://ai.xterm.codes",
+    key: "YOUR_APIKEY"
+  }
+};
+            </code>
+          </pre>
+
+          <strong>Code:</strong>
+          <div onclick="copyCode(this)" id="btn-copy">
+            <i class="btn-copy fas fa-copy"></i>
+          </div>
+          <pre class="code">
+            <code class="language-js">
+async function instantLora(id, prompt, negativePrompt) {
+  try {
+    const response = await fetch(`${api.xterm.url}/api/text2img/instant-lora?id=${id}&prompt=${encodeURIComponent(prompt)}&negativePrompt=${encodeURIComponent(negativePrompt)}&key=${api.xterm.key}`);
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status} ${response.statusText}`);
+    }
+
+    const imgBuffer = await response.arrayBuffer();
+    return imgBuffer;
+  } catch (error) {
+    console.error('Fetch error:', error);
+    throw error;
+  }
+}
+
+instantLora("1", "1girl", "")
+  .then(imgBuffer => {
+    console.log(imgBuffer); 
+  })
+  .catch(error => {
+    console.error('Error in instantLora:', error);
+  });
+            </code>
+          </pre>
+        </div>
+      </div>
+    </td>
+  </div>
+</template>
+
+
+<template id="detail12">
+  <div class="details">
+    <td colspan="3">
+      <div class="code-block">
+      <div class="params">
+        <table>
+          <thead>
+            <tr>
+              <th><strong>Body</strong></th>
+              <th><strong>Desc</strong></th>
+              <th><strong>required</strong></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Buffer</td>
+              <td>Audio buffer</td>
+              <td>true</td>
+            </tr>
+            <tr>
+              <td>key</td>
+              <td>Your Api Key</td>
+              <td>true</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+          <p>
+            <strong>Define Your Api Config</strong>
+          </p>
+        <div onclick="copyCode(this)" id="btn-copy">
+          <i class="btn-copy fas fa-copy"></i>
+        </div>
+          <pre class="code">
+            <code class="language-js">
+const api = {
+  xterm: {
+    url: "https://ai.xterm.codes",
+    key: "YOUR_APIKEY"
+  }
+};
+            </code>
+          </pre>
+          <p>
+            <strong>Code:</strong>
+          </p>
+        <div onclick="copyCode(this)" id="btn-copy">
+          <i class="btn-copy fas fa-copy"></i>
+        </div>
+          <pre class="code">
+            <code class="language-js">
+//Ini menggunakan event stream. sesuaikan dengan code anda, jika masih bingung silahkan tanya admin
+import fs from 'fs';
+import axios from 'axios';
+/* CJS
+  const fs = require("fs")
+  const axios = require("axios")
+*/
+
+const audioFilePath = 'audio.mp3';
+const model = 'Yae miko';
+const audioData = fs.readFileSync(audioFilePath);//binary (buffer)
+
+axios.post(`${api.xterm.url}/api/audioProcessing/voice-covers?model=${model}&key=${api.xterm.key}`, audioData, {
+    headers: {
+        'Content-Type': 'application/octet-stream'
+    },
+    responseType: 'stream'//Stream mode
+})
+.then(response => {
+    response.data.on('data', chunk => {
+        const eventString = chunk.toString();
+        const eventData = eventString.match(/data: (.+)/);
+        
+        if (eventData) {
+            const data = JSON.parse(eventData[1]);
+            switch (data.status){
+               case 'searching':
+               case 'separating':
+               case 'starting':
+               case 'processing':
+               case 'mixing':
+                 console.log(data)
+               break
+               case 'success':
+                 console.log('Success! Result:', data.result);// result/hasil cover
+                 response.data.destroy(); //memutuskan koneksi
+               break
+               case 'failed':
+                 console.log('Failed❗️:', data);
+                 response.data.destroy(); //memutuskan koneksi
+               break
+            }
+        }
+    });
+})
+.catch(error => {
+    console.error('Error:', error.response ? error.response.data : error.message);
+});
+            </code>
+          </pre>
+        </div>
+      </div>
+    </td>
+  </div>
+</template>
+
+<template id="detail13">
+  <div class="details">
+    <td colspan="3">
+      <div class="code-block">
+      <div class="params">
+        <table>
+          <thead>
+            <tr>
+              <th><strong>Body</strong></th>
+              <th><strong>Desc</strong></th>
+              <th><strong>required</strong></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Buffer</td>
+              <td>Audio buffer</td>
+              <td>true</td>
+            </tr>
+            <tr>
+              <td>key</td>
+              <td>Your Api Key</td>
+              <td>true</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+          <p>
+            <strong>Define Your Api Config</strong>
+          </p>
+        <div onclick="copyCode(this)" id="btn-copy">
+          <i class="btn-copy fas fa-copy"></i>
+        </div>
+          <pre class="code">
+            <code class="language-js">
+const api = {
+  xterm: {
+    url: "https://ai.xterm.codes",
+    key: "YOUR_APIKEY"
+  }
+};
+            </code>
+          </pre>
+          <p>
+            <strong>Code:</strong>
+          </p>
+        <div onclick="copyCode(this)" id="btn-copy">
+          <i class="btn-copy fas fa-copy"></i>
+        </div>
+          <pre class="code">
+            <code class="language-js">
+async function whatmusic(url, buffer) {
+  try {
+    let response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/octet-stream'
+      },
+      body: buffer
+    })
+    let result = await response.json()
+    return result
+  } catch (error) {
+    console.error('Error uploading audio buffer:', error)
+    return "gagal!"
+  }
+}
+
+const fs = require('fs')
+const audioBuffer = fs.readFileSync('path/to/audio/file')
+whatmusic(`${api.xterm.url}/api/audioProcessing/whatmusic?key=${api.xterm.key}`, audioBuffer)
+.then(a => console.log(a))
+            </code>
+          </pre>
+        </div>
+      </div>
+    </td>
+  </div>
+</template>
+
+<template id="detail14">
+  <div class="details">
+    <td colspan="3">
+      <div class="code-block">
+      <div class="params">
+        <table>
+          <thead>
+            <tr>
+              <th><strong>Body</strong></th>
+              <th><strong>Desc</strong></th>
+              <th><strong>required</strong></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Buffer</td>
+              <td>Audio buffer</td>
+              <td>true</td>
+            </tr>
+            <tr>
+              <td>key</td>
+              <td>Your Api Key</td>
+              <td>true</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+          <p>
+            <strong>Define Your Api Config</strong>
+          </p>
+        <div onclick="copyCode(this)" id="btn-copy">
+          <i class="btn-copy fas fa-copy"></i>
+        </div>
+          <pre class="code">
+            <code class="language-js">
+const api = {
+  xterm: {
+    url: "https://ai.xterm.codes",
+    key: "YOUR_APIKEY"
+  }
+};
+            </code>
+          </pre>
+          <p>
+            <strong>Code:</strong>
+          </p>
+        <div onclick="copyCode(this)" id="btn-copy">
+          <i class="btn-copy fas fa-copy"></i>
+        </div>
+          <pre class="code">
+            <code class="language-js">
+async function transcribe(url, buffer) {
+  try {
+    let response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/octet-stream'
+      },
+      body: buffer
+    })
+    let result = await response.json()
+    return result
+  } catch (error) {
+    console.error('Error uploading audio buffer:', error)
+    return "gagal!"
+  }
+}
+
+const fs = require('fs')
+const audioBuffer = fs.readFileSync('path/to/audio/file')
+transcribe(`${api.xterm.url}/api/audioProcessing/transcribe?key=${api.xterm.key}`, audioBuffer)
+.then(a => console.log(a))
+            </code>
+          </pre>
+        </div>
+      </div>
+    </td>
+  </div>
+</template>
+
+<template id="detail15">
+  <div class="details">
+    <td colspan="3">
+      <div class="code-block">
+      <div class="params">
+        <table>
+          <thead>
+            <tr>
+              <th><strong>Body</strong></th>
+              <th><strong>Desc</strong></th>
+              <th><strong>required</strong></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Buffer</td>
+              <td>Image buffer</td>
+              <td>true</td>
+            </tr>
+            <tr>
+              <td>key</td>
+              <td>Your Api Key</td>
+              <td>true</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+          <p>
+            <strong>Define Your Api Config</strong>
+          </p>
+        <div onclick="copyCode(this)" id="btn-copy">
+          <i class="btn-copy fas fa-copy"></i>
+        </div>
+          <pre class="code">
+            <code class="language-js">
+const api = {
+  xterm: {
+    url: "https://ai.xterm.codes",
+    key: "YOUR_APIKEY"
+  }
+};
+            </code>
+          </pre>
+          <p>
+            <strong>Code:</strong>
+          </p>
+        <div onclick="copyCode(this)" id="btn-copy">
+          <i class="btn-copy fas fa-copy"></i>
+        </div>
+          <pre class="code">
+            <code class="language-js">
+// Ini menggunakan event stream. Sesuaikan dengan kode Anda, jika masih bingung silakan tanya admin
+
+import axios from 'axios';
+import fs from 'fs';
+
+/* CJS
+const axios = require('axios');
+const fs = require('fs');
+*/
+
+const Luma = (image) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const response = await axios.post(api.xterm.url+'/api/img2video/luma?key='+api.xterm.key, image, {
+                headers: {
+                    'Content-Type': 'application/octet-stream'
+                },
+                responseType: 'stream'
+            });
+
+            response.data.on('data', (chunk) => {
+                try {
+                    const eventString = chunk.toString();
+                    const eventData = eventString.match(/data: (.+)/);
+                    if (eventData && eventData[1]) {
+                        const data = JSON.parse(eventData[1]);
+                        console.log(data);
+                        switch (data.status) {
+                            case "pending":
+                            case "processing":
+                                console.log(data);
+                                break;
+                            case "failed":
+                                response.data.destroy();
+                                reject(data);
+                                break;
+                            case "completed":
+                                response.data.destroy();
+                                resolve(data);
+                                break;
+                            default:
+                                console.log('Unknown status:', data);
+                        }
+                    }
+                } catch (e) {
+                    console.error('Error processing chunk:', e.message);
+                    response.data.destroy();
+                    reject(e);
+                }
+            });
+
+            response.data.on('error', (err) => {
+                console.error('Stream error:', err.message);
+                reject(err);
+            });
+
+        } catch (error) {
+            console.error('Error:', error.message);
+            reject(error);
+        }
+    });
+};
+
+Luma(fs.readFileSync("image.jpg"))
+    .then((data) => {
+        console.log('Success:', data);
+    })
+    .catch((error) => {
+        console.error('Failure:', error);
+    });
+            </code>
+          </pre>
+        </div>
+      </div>
+    </td>
+  </div>
+</template>
+
+<template id="detail22">
+  <div class="details">
+    <td colspan="3">
+      <div class="code-block">
+
+      <div class="params">
+        <table>
+          <thead>
+            <tr>
+              <th><strong>Params</strong></th>
+              <th><strong>Desc</strong></th>
+              <th><strong>required</strong></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>prompt</td>
+              <td>your prompt</td>
+              <td>true</td>
+            </tr>
+            <tr>
+              <td>negativePrompt</td>
+              <td>Your negative prompt</td>
+              <td>true</td>
+            </tr>
+            <tr>
+              <td>key</td>
+              <td>Your Api Key</td>
+              <td>true</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+          <p>
+            <strong>Define Your Api Config</strong>
+          </p>
+        <div onclick="copyCode(this)" id="btn-copy">
+          <i class="btn-copy fas fa-copy"></i>
+        </div>
+          <pre class="code">
+            <code class="language-js">
+const api = {
+  xterm: {
+    url: "https://ai.xterm.codes",
+    key: "YOUR_APIKEY"
+  }
+};
+            </code>
+          </pre>
+          <strong>Simple request:</strong>
+          <br>
+          <div onclick="copyCode(this)" id="btn-copy">
+            <i class="btn-copy fas fa-copy"></i>
+          </div>
+          <pre class="code">
+            <code class="language-js">https://ai.xterm.codes/api/text2img/dalle3?prompt=prompt&negativePrompt=negativePrompt</code>
+          </pre>
+          <br>
+        
+          <strong>Full code:</strong>
+        <div onclick="copyCode(this)" id="btn-copy">
+          <i class="btn-copy fas fa-copy"></i>
+        </div>
+          <pre class="code">
+            <code class="language-js">
+async function dalle3(prompt, negativePrompt) {
+  try {
+    const response = await fetch(`${api.xterm.url}/api/text2img/dalle3?prompt=${encodeURIComponent(prompt)}&negativePrompt=${encodeURIComponent(negativePrompt)}&key=${api.xterm.key}`);
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status} ${response.statusText}`);
+    }
+
+    const imgBuffer = await response.arrayBuffer();
+    return imgBuffer;
+  } catch (error) {
+    console.error('Fetch error:', error);
+    throw error;
+  }
+}
+
+dalle3("1girl", false)
+  .then(imgBuffer => {
+    console.log(imgBuffer); 
+  })
+  .catch(error => {
+    console.error('Error in Dalle3:', error);
+  });
+            </code>
+          </pre>
+        </div>
+      </div>
+    </td>
+  </div>
+</template>
+
+
+<template id="detail25">
+  <div class="details">
+    <td colspan="3">
+      <div class="code-block">
+
+      <div class="params">
+        <table>
+          <thead>
+            <tr>
+              <th><strong>Params</strong></th>
+              <th><strong>Desc</strong></th>
+              <th><strong>required</strong></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>prompt</td>
+              <td>your prompt</td>
+              <td>true</td>
+            </tr>
+            <tr>
+              <td>negativePrompt</td>
+              <td>Your negative prompt</td>
+              <td>true</td>
+            </tr>
+            <tr>
+              <td>key</td>
+              <td>Your Api Key</td>
+              <td>true</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+          <p>
+            <strong>Define Your Api Config</strong>
+          </p>
+        <div onclick="copyCode(this)" id="btn-copy">
+          <i class="btn-copy fas fa-copy"></i>
+        </div>
+          <pre class="code">
+            <code class="language-js">
+const api = {
+  xterm: {
+    url: "https://ai.xterm.codes",
+    key: "YOUR_APIKEY"
+  }
+};
+            </code>
+          </pre>
+
+          <strong>Simple request:</strong>
+          <br>
+          <div onclick="copyCode(this)" id="btn-copy">
+            <i class="btn-copy fas fa-copy"></i>
+          </div>
+          <pre class="code">
+            <code class="language-js">https://ai.xterm.codes/api/text2img/animediff?prompt=prompt&negativePrompt=negativePrompt</code>
+          </pre>
+          <br>
+        
+          <strong>Full code:</strong>
+        <div onclick="copyCode(this)" id="btn-copy">
+          <i class="btn-copy fas fa-copy"></i>
+        </div>
+          <pre class="code">
+            <code class="language-js">
+
+async function animediff(prompt, negativePrompt) {
+  try {
+    const response = await fetch(`${api.xterm.url}/api/text2img/animediff?prompt=${encodeURIComponent(prompt)}&negativePrompt=${encodeURIComponent(negativePrompt)}&key=${api.xterm.key}`);
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status} ${response.statusText}`);
+    }
+
+    const imgBuffer = await response.arrayBuffer();
+    return imgBuffer;
+  } catch (error) {
+    console.error('Fetch error:', error);
+    throw error;
+  }
+}
+
+animediff("1girl", false)
+  .then(imgBuffer => {
+    console.log(imgBuffer); 
+  })
+  .catch(error => {
+    console.error('Error in animediff:', error);
+  });
+            </code>
+          </pre>
+        </div>
+      </div>
+    </td>
+  </div>
+</template>
+
+<template id="detail26">
+  <div class="details">
+    <td colspan="3">
+      <div class="code-block">
+        <div class="params">
+        <table>
+          <thead>
+            <tr>
+              <th><strong>Params</strong></th>
+              <th><strong>Desc</strong></th>
+              <th><strong>required</strong></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>url</td>
+              <td>image url</td>
+              <td>true</td>
+            </tr>
+            <tr>
+              <td>key</td>
+              <td>Your Api Key</td>
+              <td>true</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+          <p>
+            <strong>Define Your Api Config</strong>
+          </p>
+        <div onclick="copyCode(this)" id="btn-copy">
+          <i class="btn-copy fas fa-copy"></i>
+        </div>
+          <pre class="code">
+            <code class="language-js">
+const api = {
+  xterm: {
+    url: "https://ai.xterm.codes",
+    key: "YOUR_APIKEY"
+  }
+};
+            </code>
+          </pre>
+        <p><strong>Code:</strong></p>
+        <div onclick="copyCode(this)" id="btn-copy">
+            <i class="btn-copy fas fa-copy"></i>
+          </div>
+        <pre class="code"><code class="language-js">
+async function enlarger(imageurl) {
+  let tryng = 0;
+  let ai = await fetch(`${api.xterm.url}/api/img2img/enlarger?&url=${imageurl}&key=${api.xterm.key}`)
+    .then(response => response.json());
+
+  if (!ai.status) return ai;
+  console.log(ai);
+
+  while (tryng < 50) { // Maksimal 50 kali
+    tryng += 1; // Menambahkan nilai tryng
+    // Pengecekan status request
+    let s = await fetch(`${api.xterm.url}/api/img2img/filters/batchProgress?id=${ai.id}`)
+      .then(response => response.json());
+
+    if (s.status === 1) {
+      console.log("Starting...");
+    } else if (s.status === 2) {
+      console.log("Processing...");
+    } else if (s.status === 3) {
+      return s; // Mengembalikan nilai s
+    } else if (s.status === 4) {
+      return console.log("Maaf terjadi kesalahan. Coba gunakan gambar lain!");
+    }
+
+    await new Promise(resolve => setTimeout(resolve, 2000));
+  }
+}
+
+enlarger("https://telegra.ph/file/ffaae4075d654f758c0c5.jpg")
+  .then(result => console.log(result))
+  .catch(error => console.error("Error:", error));
+</code></pre>
+      </div>
+    </td>
+  </div>
+</template>
+
+
+<template id="detail33">
+  <div class="details">
+    <td colspan="3">
+      <div class="code-block">
+        <div class="params">
+        <table>
+          <thead>
+            <tr>
+              <th><strong>Params</strong></th>
+              <th><strong>Desc</strong></th>
+              <th><strong>required</strong></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>prompt</td>
+              <td>Describe your song prompt</td>
+              <td>true</td>
+            </tr>
+            <tr>
+              <td>key</td>
+              <td>Your Api Key</td>
+              <td>true</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p><strong>Define Your API Config</strong></p>
+      
+      <div onclick="copyCode(this)" id="btn-copy">
+        <i class="btn-copy fas fa-copy"></i>
+      </div>
+      
+      <pre class="code">
+        <code class="language-js">
+const api = {
+  xterm: {
+    url: "https://ai.xterm.codes",
+    key: "YOUR_APIKEY"
+  }
+};
+        </code>
+      </pre>
+        
+          <strong>Code:</strong>
+          </div>
+          <div onclick="copyCode(this)" id="btn-copy">
+            <i class="btn-copy fas fa-copy"></i>
+          </div>
+          <pre class="code">
+            <code class="language-js">
+//Ini menggunakan event stream. sesuaikan dengan code anda, jika masih bingung silahkan tanya admin
+const axios = require('axios');
+const SongGenerator = (prompt) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const response = await axios({
+                method: 'post',
+                url: `${api.xterm.url}/api/audioProcessing/song-generator`,  // Ganti dengan URL server
+                params: { prompt, key: api.xterm.key },
+                responseType: 'stream'
+            })
+
+            response.data.on('data', (chunk) => {
+                try {
+                    const eventString = chunk.toString();
+                    const eventData = eventString.match(/data: (.+)/);
+                    if (eventData && eventData[1]) {
+                        const data = JSON.parse(eventData[1]);
+
+                        switch (data.status) {
+                            case 'queueing':
+                                console.log('Queueing:', data.msg);
+                                break;
+                            case 'generating':
+                                console.log('Generating:', data.msg);
+                                break;
+                            case 'failed':
+                                response.data.destroy();
+                                reject(new Error(data.msg));
+                                break;
+                            case 'success':
+                                response.data.destroy();
+                                resolve(data); 
+                                break;
+                            default:
+                                console.log('Unknown status:', data);
+                        }
+                    }
+                } catch (e) {
+                    console.error('Error processing chunk:', e.message);
+                    response.data.destroy();
+                    reject(e);
+                }
+            });
+
+            response.data.on('error', (err) => {
+                console.error('Stream error:', err.message);
+                reject(err);
+            });
+
+        } catch (error) {
+            console.error('Error:', error.message);
+            reject(error);
+        }
+    });
+};
+
+SongGenerator('Badak dan ikan')
+    .then((result) => {
+        console.log('Song generated successfully:', result);
+    })
+    .catch((error) => {
+        return console.error('Failed to generate song:', error.message);
+    });
+            </code>
+          </pre>
+        </div>
+      </div>
+    </td>
+  </div>
+</template>
+
+<template id="detail34">
+  <div class="details">
+    <div class="code-block">
+      <div class="params">
+        <table>
+          <thead>
+            <tr>
+              <th><strong>Params</strong></th>
+              <th><strong>Desc</strong></th>
+              <th><strong>Required</strong></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>target</td>
+              <td>URL image target</td>
+              <td>true</td>
+            </tr>
+            <tr>
+              <td>face</td>
+              <td>URL image face</td>
+              <td>true</td>
+            </tr>
+            <tr>
+              <td>key</td>
+              <td>Your API Key</td>
+              <td>true</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p><strong>Define Your API Config</strong></p>
+      
+      <div onclick="copyCode(this)" id="btn-copy">
+        <i class="btn-copy fas fa-copy"></i>
+      </div>
+      
+      <pre class="code">
+        <code class="language-js">
+const api = {
+  xterm: {
+    url: "https://ai.xterm.codes",
+    key: "YOUR_APIKEY"
+  }
+};
+        </code>
+      </pre>
+
+      <p><strong>Code:</strong></p>
+      
+      <div onclick="copyCode(this)" id="btn-copy">
+        <i class="btn-copy fas fa-copy"></i>
+      </div>
+
+      <pre class="code">
+        <code class="language-js">
+// Ini menggunakan event stream. Sesuaikan dengan code Anda, jika masih bingung silahkan tanya admin
+const axios = require('axios');
+
+const FaceSwap = (face, target) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const response = await axios({
+                method: 'post',
+                url: `${api.xterm.url}/api/img2img/faceswap`,
+                params: { face, target, key: api.xterm.key },
+                responseType: 'stream'
+            });
+
+            response.data.on('data', (chunk) => {
+                try {
+                    const eventString = chunk.toString();
+                    const eventData = eventString.match(/data: (.+)/);
+                    if (eventData && eventData[1]) {
+                        const data = JSON.parse(eventData[1]);
+
+                        switch (data.status) {
+                            case 'queueing':
+                                console.log('Queueing:', data.msg);
+                                break;
+                            case 'generating':
+                                console.log('Generating:', data.msg);
+                                break;
+                            case 'failed':
+                                response.data.destroy();
+                                reject(new Error(data.msg));
+                                break;
+                            case 'success':
+                                response.data.destroy();
+                                resolve(data);
+                                break;
+                            default:
+                                console.log('Unknown status:', data);
+                        }
+                    }
+                } catch (e) {
+                    console.error('Error processing chunk:', e.message);
+                    response.data.destroy();
+                    reject(e);
+                }
+            });
+
+            response.data.on('error', (err) => {
+                console.error('Stream error:', err.message);
+                reject(err);
+            });
+
+        } catch (error) {
+            console.error('Error:', error.message);
+            reject(error);
+        }
+    });
+};
+
+// Contoh penggunaan:
+FaceSwap('https://tmpfiles.org/dl/12538601/1726069107788.jpg', 'https://tmpfiles.org/dl/12538570/1726069036150.jpg')
+    .then((result) => {
+        console.log('Face swap success:', result);
+    })
+    .catch((error) => {
+        console.error('Failed to perform face swap:', error.message);
+    });
+        </code>
+      </pre>
+    </div>
+  </div>
+</template>
+
+<template id="detail16">
+  <div class="details">
+    <td colspan="3">
+      <div class="code-block">
+        <div class="params">
+        <table>
+          <thead>
+            <tr>
+              <th><strong>Params</strong></th>
+              <th><strong>Desc</strong></th>
+              <th><strong>required</strong></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>text</td>
+              <td>text input</td>
+              <td>true</td>
+            </tr>
+            <tr>
+              <td>voice</td>
+              <td>voice ID</td>
+              <td>true</td>
+            </tr>           
+            <tr>
+              <td>key</td>
+              <td>Your Api Key</td>
+              <td>true</td>
+            </tr>
+          </tbody>
+        </table>
+        <strong class="tag-title">List voice ID</strong>
+        <table>
+          <thead>
+            <tr>
+              <th><strong>ID</strong></th>
+              <th><strong>Desc</strong></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>bella</td>
+              <td>Bella Clarissa</td>
+            </tr>
+            <tr>
+              <td>echilling</td>
+              <td>Elaine Calestia(Vtuber)</td>
+            </tr>           
+            <tr>
+              <td>adam</td>
+              <td>default</td>
+            </tr>
+            <tr>
+              <td>prabowo</td>
+              <td>The 8th President of Indonesia</td>
+            </tr>
+            <tr>
+              <td>thomas_shelby</td>
+              <td>The Peaky Blinders</td>
+            </tr>
+            <tr>
+              <td>michi_jkt48</td>
+              <td>Michi From Jkt48 GEN-11</td>
+            </tr>
+            <tr>
+              <td>jokowi</td>
+              <td>The 7th President of Indonesia</td>
+            </tr>
+            <tr>
+              <td>megawati</td>
+              <td>The 5th President of Indonesia</td>
+            </tr>
+            <tr>
+              <td>nokotan</td>
+              <td>My Deer Friend Nokotan</td>
+            </tr>
+            <tr>
+              <td>boboiboy</td>
+              <td>Boboiboi Galaxy</td>
+            </tr>
+            <tr>
+              <td>yanzgpt</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>keqing</td>
+              <td>Genshin Impact</td>
+            </tr>
+            <tr>
+              <td>yanami_anna</td>
+              <td>Make Heroine</td>
+            </tr>
+          </tbody>
+        </table>
+
+          <strong>Code:</strong>
+        </div>
+          <p>
+            <strong>Define Your Api Config</strong>
+          </p>
+        <div onclick="copyCode(this)" id="btn-copy">
+          <i class="btn-copy fas fa-copy"></i>
+        </div>
+          <pre class="code">
+            <code class="language-js">
+const api = {
+  xterm: {
+    url: "https://ai.xterm.codes",
+    key: "YOUR_APIKEY"
+  }
+};
+            </code>
+          </pre>
+          <p>
+            <strong>Code:</strong>
+          </p>
+        <div onclick="copyCode(this)" id="btn-copy">
+          <i class="btn-copy fas fa-copy"></i>
+        </div>
+          <pre class="code">
+            <code class="language-js">
+async function Elevenlabs(text, voice) {
+  try {
+    const response = await fetch(`${api.xterm.url}/api/text2speech/elevenlabs?text=${encodeURIComponent(text)}&voice=${voice}&key=${api.xterm.key}`);
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status} ${response.statusText}`);
+    }
+
+    const audioBuffer = await response.arrayBuffer();
+    return audioBuffer;
+  } catch (error) {
+    console.error('Fetch error:', error);
+    throw error;
+  }
+}
+
+Elevenlabs("hallo", "INSERT_VOICE_ID_HERE")
+  .then(audioBuffer => {
+    console.log(audioBuffer); // Return audio buffer
+})
+.catch(error => {
+    console.error('Error in Elevenlabs:', error);
+});
+            </code>
+          </pre>
+        </div>
+      </div>
+    </td>
+  </div>
+</template>
